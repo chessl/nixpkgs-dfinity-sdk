@@ -80,10 +80,6 @@ let
                 ''}
                 ln -s $CACHE_DIR/$binary $out/bin/$binary
               done
-
-              wrapProgram $CACHE_DIR/dfx --set DFX_CONFIG_ROOT $out
-              rm $out/bin/dfx
-              ln -s $CACHE_DIR/dfx $out/bin/dfx
             '';
             system = resolvedSystem;
             inherit version;
@@ -144,7 +140,7 @@ let
         systems = {
           "x86_64-darwin" = {
             # sha256 = self.lib.fakeSha256;
-            sha256 = "BzdSlOUzPCxOozZzpnLzzbCEUPS25wLcPmvh9UQ4Y5c=";
+            sha256 = "sha256-ZrZ+/3+zAd8DPxi+V/APQP8lNAT2IKG48gTBX72chWg=";
           };
           "x86_64-linux" = {
             # sha256 = self.lib.fakeSha256;
