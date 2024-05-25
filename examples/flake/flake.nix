@@ -3,7 +3,7 @@
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     dfinity-sdk = {
-      # url = "github:paulyoung/nixpkgs-dfinity-sdk";
+      # url = "github:chessl/nixpkgs-dfinity-sdk";
       url = "../../";
       flake = false;
     };
@@ -11,7 +11,8 @@
 
   outputs = { self, nixpkgs, flake-utils, dfinity-sdk }:
     flake-utils.lib.eachDefaultSystem (
-      system: let
+      system:
+      let
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
@@ -22,31 +23,32 @@
         dfinitySdk = (pkgs.dfinity-sdk {
           acceptLicenseAgreement = true;
           sdkSystem = system;
-        })."0.15.2";
+        })."0.20.0";
       in
-        {
-          # `nix build`
-          defaultPackage = pkgs.runCommand "example" {
+      {
+        # `nix build`
+        defaultPackage = pkgs.runCommand "example"
+          {
             buildInputs = [
               dfinitySdk
               pkgs.cacert
             ];
           } ''
-            export HOME="$TMP"
-            cp ${./dfx.json} dfx.json
-            dfx start --background
-            dfx stop
-            touch $out
-          '';
+          export HOME="$TMP"
+          cp ${./dfx.json} dfx.json
+          dfx start --background
+          dfx stop
+          touch $out
+        '';
 
-          packages.dfx = dfinitySdk;
+        packages.dfx = dfinitySdk;
 
-          # `nix develop`
-          devShell = pkgs.mkShell {
-            buildInputs = [
-              dfinitySdk
-            ];
-          };
-        }
+        # `nix develop`
+        devShell = pkgs.mkShell {
+          buildInputs = [
+            dfinitySdk
+          ];
+        };
+      }
     );
 }
